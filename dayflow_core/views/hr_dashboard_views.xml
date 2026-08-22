@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dayflow_hr_dashboard_form" model="ir.ui.view">
+        <field name="name">dayflow.hr.dashboard.form</field>
+        <field name="model">dayflow.hr.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Dayflow HR Dashboard" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Dayflow HR Dashboard</h1>
+                    </div>
+                    
+                    <separator string="Today's Overview"/>
+                    <div class="o_group">
+                        <div class="row">
+                            <div class="col-md-3 text-center">
+                                <button type="object" name="action_view_employees" class="btn btn-outline-primary oe_stat_button" style="width: 100%; height: 100px; margin-bottom: 10px; padding: 15px;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 24px; font-weight: bold; display: block;">
+                                            <field name="total_employees"/>
+                                        </span>
+                                        <span class="o_stat_text" style="display: block; margin-top: 5px;">Total Employees</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <button type="object" name="action_view_present" class="btn btn-outline-success oe_stat_button" style="width: 100%; height: 100px; margin-bottom: 10px; padding: 15px;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 24px; font-weight: bold; display: block; color: green;">
+                                            <field name="present_today"/>
+                                        </span>
+                                        <span class="o_stat_text" style="display: block; margin-top: 5px;">Present Today</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <button type="object" name="action_view_absent" class="btn btn-outline-danger oe_stat_button" style="width: 100%; height: 100px; margin-bottom: 10px; padding: 15px;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 24px; font-weight: bold; display: block; color: red;">
+                                            <field name="absent_today"/>
+                                        </span>
+                                        <span class="o_stat_text" style="display: block; margin-top: 5px;">Absent Today</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <button type="object" name="action_view_on_leave" class="btn btn-outline-info oe_stat_button" style="width: 100%; height: 100px; margin-bottom: 10px; padding: 15px;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 24px; font-weight: bold; display: block; color: blue;">
+                                            <field name="on_leave_today"/>
+                                        </span>
+                                        <span class="o_stat_text" style="display: block; margin-top: 5px;">On Leave Today</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <separator string="HR Action Center"/>
+                    <div class="o_group">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <button type="object" name="action_view_pending_leaves" class="btn btn-outline-warning oe_stat_button" style="width: 100%; height: 120px; margin-bottom: 15px; padding: 15px; border-left: 5px solid #ffc107;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 28px; font-weight: bold; display: block; color: #ffc107;">
+                                            <field name="pending_leaves"/>
+                                        </span>
+                                        <span class="o_stat_text" style="font-weight: bold; display: block; margin-top: 5px;">🔴 Pending Leaves</span>
+                                        <span class="text-muted" style="font-size: 11px; display: block; margin-top: 3px;">Needs your review</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <button type="object" name="action_view_pending_corrections" class="btn btn-outline-warning oe_stat_button" style="width: 100%; height: 120px; margin-bottom: 15px; padding: 15px; border-left: 5px solid #fd7e14;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 28px; font-weight: bold; display: block; color: #fd7e14;">
+                                            <field name="pending_corrections"/>
+                                        </span>
+                                        <span class="o_stat_text" style="font-weight: bold; display: block; margin-top: 5px;">🔴 Attendance Corrections</span>
+                                        <span class="text-muted" style="font-size: 11px; display: block; margin-top: 3px;">Correction requests pending</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <button type="object" name="action_view_missing_checkouts" class="btn btn-outline-warning oe_stat_button" style="width: 100%; height: 120px; margin-bottom: 15px; padding: 15px; border-left: 5px solid #dc3545;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 28px; font-weight: bold; display: block; color: #dc3545;">
+                                            <field name="missing_checkouts"/>
+                                        </span>
+                                        <span class="o_stat_text" style="font-weight: bold; display: block; margin-top: 5px;">🟠 Missing Check-Outs</span>
+                                        <span class="text-muted" style="font-size: 11px; display: block; margin-top: 3px;">Incomplete attendance records</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                <button type="object" name="action_view_documents_pending" class="btn btn-outline-warning oe_stat_button" style="width: 100%; height: 120px; margin-bottom: 15px; padding: 15px; border-left: 5px solid #20c997;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 28px; font-weight: bold; display: block; color: #20c997;">
+                                            <field name="documents_pending"/>
+                                        </span>
+                                        <span class="o_stat_text" style="font-weight: bold; display: block; margin-top: 5px;">🟡 Pending Verification</span>
+                                        <span class="text-muted" style="font-size: 11px; display: block; margin-top: 3px;">Documents awaiting approval</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-md-6 text-center">
+                                <button type="object" name="action_view_profile_issues" class="btn btn-outline-warning oe_stat_button" style="width: 100%; height: 120px; margin-bottom: 15px; padding: 15px; border-left: 5px solid #6f42c1;">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_value" style="font-size: 28px; font-weight: bold; display: block; color: #6f42c1;">
+                                            <field name="profile_issues"/>
+                                        </span>
+                                        <span class="o_stat_text" style="font-weight: bold; display: block; margin-top: 5px;">🟡 Profile Issues</span>
+                                        <span class="text-muted" style="font-size: 11px; display: block; margin-top: 3px;">Missing key info (phone, work mode)</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_dayflow_hr_dashboard" model="ir.actions.act_window">
+        <field name="name">Dayflow HR Dashboard</field>
+        <field name="res_model">dayflow.hr.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <!-- Root Menu for Dayflow HRMS -->
+    <menuitem id="menu_dayflow_root" name="Dayflow HRMS" sequence="10"/>
+
+    <!-- Dashboard Submenu -->
+    <menuitem id="menu_dayflow_dashboard" name="Dashboard" parent="menu_dayflow_root" action="action_dayflow_hr_dashboard" sequence="1"/>
+</odoo>
