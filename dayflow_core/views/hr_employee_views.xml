@@ -6,6 +6,15 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
+            <!-- Add alert banner on top of the sheet -->
+            <xpath expr="//sheet" position="before">
+                <field name="has_alerts" invisible="1"/>
+                <div class="alert alert-danger" role="alert" style="margin-bottom:10px;" invisible="not has_alerts">
+                    <strong>⚠️ Dayflow Attendance Exceptions Alert:</strong>
+                    <field name="attendance_alerts_summary" style="white-space: pre-wrap; font-weight: bold; margin-top: 5px; display: block;"/>
+                </div>
+            </xpath>
+
             <!-- Add Employee ID next to Name/Title -->
             <xpath expr="//h1" position="before">
                 <h2>
