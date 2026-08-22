@@ -75,7 +75,8 @@ export default function EmployeeManager({ token }) {
         id: data.employee_id,
         email: email,
         password: data.temporary_password,
-        hasFace: !!faceImage,
+        hasFace: data.face_registered === true,
+        faceError: data.face_error || null,
         name: `${firstName} ${lastName}`
       });
       setIsAddOpen(false);
@@ -501,16 +502,24 @@ export default function EmployeeManager({ token }) {
                 </div>
 
                 {/* Face status */}
-                <div className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold ${
+                <div className={`flex items-start space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold ${
                   newEmpCredentials.hasFace
                     ? 'bg-green-50 border border-green-200 text-green-700'
-                    : 'bg-orange-50 border border-orange-200 text-orange-700'
+                    : newEmpCredentials.faceError
+                      ? 'bg-red-50 border border-red-200 text-red-700'
+                      : 'bg-orange-50 border border-orange-200 text-orange-700'
                 }`}>
-                  <span>{newEmpCredentials.hasFace ? '✅' : '⚠️'}</span>
-                  <span>{newEmpCredentials.hasFace
-                    ? 'Face recognition pre-registered — employee can check-in immediately!'
-                    : 'No face photo uploaded — employee must enroll face after first login'
-                  }</span>
+                  <span className="flex-shrink-0 mt-0.5">
+                    {newEmpCredentials.hasFace ? '✅' : newEmpCredentials.faceError ? '❌' : '⚠️'}
+                  </span>
+                  <span>
+                    {newEmpCredentials.hasFace
+                      ? 'Face recognition pre-registered — employee can check-in immediately!'
+                      : newEmpCredentials.faceError
+                        ? <>Photo uploaded but face not detected: <b>{newEmpCredentials.faceError}</b> Employee must enroll face after login.</>
+                        : 'No face photo uploaded — employee must enroll face after first login.'
+                    }
+                  </span>
                 </div>
 
                 {/* Copy all button */}

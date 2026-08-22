@@ -1237,16 +1237,21 @@ def create_employee(
             
         profile_pic = f"/uploads/{filename}"
         
-        # Extract face embedding
+        # Extract face embedding using TFLite face detector + MobileFaceNet
+        face_extraction_error = None
         try:
             img = cv2.imread(filepath)
             if img is not None:
-                face_emb = face_verifier.get_face_embedding(img)
-                if face_emb is not None:
-                    # Convert numpy array to list of floats for JSON serialization
-                    embedding = face_emb.tolist()
+                # get_face_embedding already returns a list (L2-normalized 128-d vector)
+                embedding = face_verifier.get_face_embedding(img)
+            else:
+                face_extraction_error = "Could not read the uploaded image file."
+        except ValueError as e:
+            face_extraction_error = str(e)
+            print(f"Face detection warning for {emp_id}: {e}")
         except Exception as e:
-            print("Failed to extract face embedding:", e)
+            face_extraction_error = "Unexpected error during face processing."
+            print(f"Face extraction error for {emp_id}: {e}")
             
     # 2. Create Employee Profile
     j_date = datetime.strptime(joining_date, "%Y-%m-%d").date()
@@ -1306,7 +1311,13 @@ def create_employee(
     db.add(notif)
     
     db.commit()
-    return {"message": "Employee created successfully!", "employee_id": emp_id, "temporary_password": temp_pass}
+    return {
+        "message": "Employee created successfully!",
+        "employee_id": emp_id,
+        "temporary_password": temp_pass,
+        "face_registered": embedding is not None,
+        "face_error": face_extraction_error if face_image and embedding is None else None
+    }
 
 @app.put("/api/admin/employees/{employee_id}")
 def update_employee(employee_id: str, req: EmployeeUpdateSchema, admin: User = Depends(get_current_admin), db: Session = Depends(get_db)):
