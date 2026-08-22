@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Copy, CheckCheck, User, Key, Mail, IdCard } from 'lucide-react';
 
 export default function EmployeeManager({ token }) {
   const [employees, setEmployees] = useState([]);
@@ -10,6 +10,8 @@ export default function EmployeeManager({ token }) {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedEmp, setSelectedEmp] = useState(null);
+  const [newEmpCredentials, setNewEmpCredentials] = useState(null); // { id, email, password, hasFace }
+  const [copied, setCopied] = useState(false);
 
   // Form states
   const [firstName, setFirstName] = useState('');
@@ -69,7 +71,13 @@ export default function EmployeeManager({ token }) {
       if (!res.ok) throw new Error(data.detail || "Failed to add employee.");
       
       const faceMsg = faceImage ? ' Face recognition pre-registered ✓' : ' (Remind employee to enroll face)';
-      alert(`✅ Employee ${data.employee_id} created!\nTemp password: ${data.temporary_password}\n${faceMsg}`);
+      setNewEmpCredentials({
+        id: data.employee_id,
+        email: email,
+        password: data.temporary_password,
+        hasFace: !!faceImage,
+        name: `${firstName} ${lastName}`
+      });
       setIsAddOpen(false);
       resetForm();
       fetchEmployees();
@@ -427,6 +435,115 @@ export default function EmployeeManager({ token }) {
                 <button type="submit" className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-bold shadow">Save Changes</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── CREDENTIAL REVEAL MODAL ─────────────────────── */}
+      {newEmpCredentials && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)'}}>
+          <div className="relative w-full max-w-md">
+
+            {/* Glow ring */}
+            <div className="absolute -inset-1 rounded-3xl opacity-60 blur-xl"
+              style={{background: 'linear-gradient(135deg, #7c3aed, #06b6d4)'}} />
+
+            <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl">
+
+              {/* Header gradient banner */}
+              <div className="px-8 pt-8 pb-6 text-center"
+                style={{background: 'linear-gradient(135deg, #1a0933 0%, #2d1b69 100%)'}}>
+                <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center text-3xl shadow-xl"
+                  style={{background: 'linear-gradient(135deg,#7c3aed,#a855f7)'}}>
+                  🎉
+                </div>
+                <h2 className="text-xl font-black text-white">Employee Registered!</h2>
+                <p className="text-violet-300 text-sm mt-1 font-medium">
+                  Share these credentials with <span className="text-white font-bold">{newEmpCredentials.name}</span>
+                </p>
+              </div>
+
+              {/* Credentials body */}
+              <div className="px-8 py-6 space-y-3">
+
+                {/* Employee ID */}
+                <div className="flex items-center space-x-3 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+                  <div className="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
+                    <IdCard className="h-4 w-4 text-violet-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Employee ID</p>
+                    <p className="text-sm font-black text-slate-800 font-mono">{newEmpCredentials.id}</p>
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="flex items-center space-x-3 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+                  <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <Mail className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Login Email</p>
+                    <p className="text-sm font-bold text-slate-800 truncate">{newEmpCredentials.email}</p>
+                  </div>
+                </div>
+
+                {/* Temp Password — highlighted */}
+                <div className="flex items-center space-x-3 border-2 border-amber-300 bg-amber-50 rounded-xl px-4 py-3">
+                  <div className="w-8 h-8 rounded-lg bg-amber-200 flex items-center justify-center flex-shrink-0">
+                    <Key className="h-4 w-4 text-amber-700" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-black text-amber-600 uppercase tracking-wider">Temporary Password</p>
+                    <p className="text-sm font-black text-amber-900 font-mono tracking-wide">{newEmpCredentials.password}</p>
+                  </div>
+                </div>
+
+                {/* Face status */}
+                <div className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold ${
+                  newEmpCredentials.hasFace
+                    ? 'bg-green-50 border border-green-200 text-green-700'
+                    : 'bg-orange-50 border border-orange-200 text-orange-700'
+                }`}>
+                  <span>{newEmpCredentials.hasFace ? '✅' : '⚠️'}</span>
+                  <span>{newEmpCredentials.hasFace
+                    ? 'Face recognition pre-registered — employee can check-in immediately!'
+                    : 'No face photo uploaded — employee must enroll face after first login'
+                  }</span>
+                </div>
+
+                {/* Copy all button */}
+                <button
+                  onClick={() => {
+                    const text = `Dayflow HRMS Login Credentials\n\nEmployee ID: ${newEmpCredentials.id}\nEmail: ${newEmpCredentials.email}\nTemporary Password: ${newEmpCredentials.password}\n\nLogin at: http://localhost:5173\nYou will be asked to set a new password on first login.`;
+                    navigator.clipboard.writeText(text);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2500);
+                  }}
+                  className={`w-full flex items-center justify-center space-x-2 py-3 rounded-xl text-sm font-black transition-all duration-200 ${
+                    copied
+                      ? 'bg-green-500 text-white'
+                      : 'text-white hover:opacity-90'
+                  }`}
+                  style={copied ? {} : {background: 'linear-gradient(135deg,#7c3aed,#a855f7)'}}
+                >
+                  {copied ? <CheckCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  <span>{copied ? 'Copied to clipboard!' : 'Copy Credentials to Share'}</span>
+                </button>
+
+                <p className="text-[10px] text-slate-400 text-center font-medium">
+                  Share via WhatsApp, email, or in-person. The employee must reset their password on first login.
+                </p>
+
+                <button
+                  onClick={() => { setNewEmpCredentials(null); setCopied(false); }}
+                  className="w-full py-2.5 rounded-xl text-sm font-bold text-slate-500 border border-slate-200 hover:bg-slate-50 transition"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
