@@ -420,43 +420,65 @@ export default function App() {
 
   // Dashboard sidebar layout
   const sidebarItems = isAdmin ? [
-    { name: 'Dashboard', icon: LayoutDashboard },
-    { name: 'Employees', icon: User },
-    { name: 'Attendance', icon: Clock },
-    { name: 'Time Off', icon: CalendarRange },
-    { name: 'Payroll', icon: Lock },
-    { name: 'Documents', icon: Sparkles },
-    { name: 'Settings', icon: Settings }
+    { name: 'Dashboard', icon: LayoutDashboard, emoji: '📊' },
+    { name: 'Employees', icon: User, emoji: '👥' },
+    { name: 'Attendance', icon: Clock, emoji: '🕐' },
+    { name: 'Time Off', icon: CalendarRange, emoji: '📅' },
+    { name: 'Payroll', icon: Lock, emoji: '💰' },
+    { name: 'Documents', icon: Sparkles, emoji: '📄' },
+    { name: 'Settings', icon: Settings, emoji: '⚙️' }
   ] : [
-    { name: 'Dashboard', icon: LayoutDashboard },
-    { name: 'My Profile', icon: User },
-    { name: 'Attendance', icon: Clock },
-    { name: 'Time Off', icon: CalendarRange },
-    { name: 'Notifications', icon: Bell }
+    { name: 'Dashboard', icon: LayoutDashboard, emoji: '🏠' },
+    { name: 'My Profile', icon: User, emoji: '👤' },
+    { name: 'Attendance', icon: Clock, emoji: '🕐' },
+    { name: 'Time Off', icon: CalendarRange, emoji: '🌴' },
+    { name: 'Notifications', icon: Bell, emoji: '🔔' }
   ];
+
+  const activeNavClass = isAdmin
+    ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-900/50'
+    : 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-900/50';
+  const headerAccent = isAdmin ? 'from-violet-600 to-purple-600' : 'from-blue-600 to-cyan-600';
+  const roleBadgeClass = isAdmin
+    ? 'bg-violet-500/20 text-violet-300 border-violet-500/30'
+    : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
 
 
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* Sidebar Navigation */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col justify-between flex-shrink-0 border-r border-slate-800 hidden md:flex">
-        <div>
-          {/* Logo */}
-          <div className="p-6 border-b border-slate-800 flex items-center space-x-2.5">
-            <div className="h-9 w-9 rounded-lg bg-primary-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
-              DF
-            </div>
-            <div>
-              <p className="font-extrabold text-sm tracking-tight text-white">Dayflow HRMS</p>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-                {isAdmin ? 'HR Admin Panel' : 'Employee Workspace'}
-              </p>
+    <div className="min-h-screen flex" style={{background: isAdmin ? '#0f0a1e' : '#0a0f1e'}}>
+
+      {/* ── SIDEBAR ─────────────────────────────── */}
+      <aside className={`w-64 flex flex-col justify-between flex-shrink-0 hidden md:flex relative overflow-hidden`}
+        style={{background: isAdmin
+          ? 'linear-gradient(180deg, #1a0933 0%, #2d1b69 50%, #1e1040 100%)'
+          : 'linear-gradient(180deg, #0a1628 0%, #0f2044 50%, #0a1628 100%)'}}>
+
+        {/* Subtle glow orb behind sidebar */}
+        <div className={`absolute top-0 left-0 w-full h-64 opacity-30 blur-3xl pointer-events-none`}
+          style={{background: isAdmin ? 'radial-gradient(ellipse at 50% 0%, #7c3aed, transparent)' : 'radial-gradient(ellipse at 50% 0%, #2563eb, transparent)'}} />
+
+        <div className="relative z-10">
+          {/* Logo area */}
+          <div className="px-6 py-5 border-b border-white/5">
+            <div className="flex items-center space-x-3">
+              <div className={`h-10 w-10 rounded-2xl flex items-center justify-center font-black text-white text-base shadow-xl`}
+                style={{background: isAdmin
+                  ? 'linear-gradient(135deg, #7c3aed, #a855f7)'
+                  : 'linear-gradient(135deg, #2563eb, #06b6d4)'}}>
+                DF
+              </div>
+              <div>
+                <p className="font-black text-sm text-white tracking-tight">Dayflow HRMS</p>
+                <p className={`text-[10px] font-bold uppercase tracking-widest ${isAdmin ? 'text-violet-400' : 'text-cyan-400'}`}>
+                  {isAdmin ? '🏢 HR Admin Panel' : '✨ My Workspace'}
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Nav menu links */}
-          <nav className="p-4 space-y-1">
+          {/* Nav links */}
+          <nav className="px-3 py-4 space-y-0.5">
             {sidebarItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.name;
@@ -464,79 +486,104 @@ export default function App() {
                 <button
                   key={item.name}
                   onClick={() => setActiveTab(item.name)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-md text-sm font-semibold transition ${
-                    isActive 
-                      ? 'bg-primary-600 text-white' 
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 group ${
+                    isActive
+                      ? activeNavClass
+                      : 'text-white/40 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <Icon className="h-4.5 w-4.5" />
-                    <span>{item.name}</span>
+                    <span className={`text-base transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
+                      {item.emoji}
+                    </span>
+                    <span className={isActive ? 'text-white font-bold' : ''}>{item.name}</span>
                   </div>
-                  {isActive && <ChevronRight className="h-3.5 w-3.5" />}
+                  {isActive && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-white/80 animate-pulse" />
+                  )}
                 </button>
               );
             })}
           </nav>
         </div>
 
-        {/* Footer info & logout */}
-        <div className="p-4 border-t border-slate-800 space-y-4">
-          <div className="flex items-center space-x-3 px-2">
-            <div className="h-9 w-9 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-300 uppercase border border-slate-700">
-              {user.name.split(' ').map(n => n[0]).join('')}
+        {/* User footer */}
+        <div className="relative z-10 p-4 border-t border-white/5">
+          <div className="flex items-center space-x-3 p-3 rounded-xl bg-white/5 mb-2">
+            <div className={`h-9 w-9 rounded-xl flex items-center justify-center text-xs font-black text-white flex-shrink-0`}
+              style={{background: isAdmin ? 'linear-gradient(135deg,#7c3aed,#a855f7)' : 'linear-gradient(135deg,#2563eb,#06b6d4)'}}>
+              {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
             </div>
-            <div className="truncate max-w-[140px]">
+            <div className="truncate min-w-0">
               <p className="text-xs font-bold text-white truncate">{user.name}</p>
-              <p className="text-[9px] text-slate-500 truncate">{user.email}</p>
+              <p className={`text-[9px] font-semibold truncate ${isAdmin ? 'text-violet-400' : 'text-cyan-400'}`}>{user.role}</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-3 px-3.5 py-2.5 text-sm font-semibold text-slate-400 hover:text-white hover:bg-red-950/30 hover:text-red-500 rounded-md transition"
+            className="w-full flex items-center justify-center space-x-2 py-2 rounded-xl text-xs font-bold text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
           >
-            <LogOut className="h-4.5 w-4.5" />
+            <LogOut className="h-3.5 w-3.5" />
             <span>Sign Out</span>
           </button>
         </div>
       </aside>
 
-      {/* Main content grid */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top Header navbar */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10">
+      {/* ── MAIN CONTENT ────────────────────────── */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50">
+
+        {/* Top header */}
+        <header className="bg-white border-b border-slate-100 flex items-center justify-between px-6 h-16 flex-shrink-0 shadow-sm">
           <div className="flex items-center space-x-3">
-            <span className="font-extrabold text-slate-800 text-lg">{activeTab}</span>
+            {/* Coloured accent bar */}
+            <div className={`w-1 h-7 rounded-full bg-gradient-to-b ${headerAccent}`} />
+            <div>
+              <h1 className="font-black text-slate-800 text-base leading-tight">{activeTab}</h1>
+              <p className="text-[10px] text-slate-400 font-semibold">
+                {new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long' })}
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center space-x-4">
-            {/* Quick user role badge */}
-            <span className="text-[10px] font-bold tracking-wider text-primary-700 bg-primary-50 px-2 py-0.5 rounded border border-primary-100 uppercase">
+          <div className="flex items-center space-x-3">
+            <span className={`text-[10px] font-black tracking-widest px-2.5 py-1 rounded-lg border uppercase ${roleBadgeClass}`}>
               {user.role}
             </span>
-            <div className="h-8 w-px bg-slate-200"></div>
+
             {!isAdmin && (
               <button
                 onClick={() => setActiveTab('Notifications')}
-                className="relative p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition"
+                className="relative p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition"
               >
-                <Bell className="h-5 w-5" />
+                <Bell className="h-4.5 w-4.5" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-rose-500 rounded-full" />
               </button>
             )}
+
+            {/* User avatar pill */}
+            <div className="flex items-center space-x-2 pl-3 border-l border-slate-100">
+              <div className={`h-8 w-8 rounded-xl flex items-center justify-center text-xs font-black text-white`}
+                style={{background: isAdmin ? 'linear-gradient(135deg,#7c3aed,#a855f7)' : 'linear-gradient(135deg,#2563eb,#06b6d4)'}}>
+                {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-xs font-bold text-slate-700 leading-tight">{user.name}</p>
+                <p className="text-[10px] text-slate-400 truncate max-w-[120px]">{user.email}</p>
+              </div>
+            </div>
+
             <button
               onClick={handleLogout}
-              className="p-1.5 text-slate-400 hover:text-red-600 rounded-full hover:bg-red-50 transition md:hidden"
-              title="Sign Out"
+              className="p-2 text-slate-400 hover:text-red-500 rounded-xl hover:bg-red-50 transition md:hidden"
             >
-              <LogOut className="h-5 w-5" />
+              <LogOut className="h-4.5 w-4.5" />
             </button>
           </div>
         </header>
 
-        {/* View content container */}
+        {/* Page content */}
         <main className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-6xl mx-auto h-full">
+          <div className="max-w-6xl mx-auto">
             {isAdmin ? (
               <>
                 {activeTab === 'Dashboard' && <AdminDashboard token={token} onNavigate={setActiveTab} />}
