@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_dayflow_employee_document_tree" model="ir.ui.view">
+        <field name="name">dayflow.employee.document.tree</field>
+        <field name="model">dayflow.employee.document</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Documents">
+                <field name="employee_id"/>
+                <field name="document_name"/>
+                <field name="document_type"/>
+                <field name="file_filename"/>
+                <field name="status" widget="badge"
+                       decoration-warning="status == 'pending'"
+                       decoration-success="status == 'approved'"
+                       decoration-danger="status == 'rejected'"/>
+                <field name="verified_by" optional="hide"/>
+                <field name="verified_at" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_dayflow_employee_document_form" model="ir.ui.view">
+        <field name="name">dayflow.employee.document.form</field>
+        <field name="model">dayflow.employee.document</field>
+        <field name="arch" type="xml">
+            <form string="Employee Document Verification">
+                <header>
+                    <button name="action_approve" type="object" string="Verify &amp; Approve" class="oe_highlight" invisible="status != 'pending'" groups="dayflow_core.group_hr_officer"/>
+                    <button name="action_reject" type="object" string="Reject" class="btn-danger" invisible="status != 'pending'" groups="dayflow_core.group_hr_officer"/>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,approved,rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Employee Info">
+                            <field name="employee_id" readonly="status != 'pending'"/>
+                            <field name="document_name" readonly="status != 'pending'"/>
+                            <field name="document_type" readonly="status != 'pending'"/>
+                        </group>
+                        <group string="File Attachment">
+                            <field name="file" filename="file_filename" readonly="status != 'pending'"/>
+                            <field name="file_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="HR Remarks">
+                        <field name="remark" placeholder="Add verification remarks or rejection details..." readonly="status != 'pending'"/>
+                    </group>
+                    <group string="Verification Audit" invisible="status == 'pending'">
+                        <group>
+                            <field name="verified_by"/>
+                        </group>
+                        <group>
+                            <field name="verified_at"/>
+                        </group>
+                    </group>
+                </sheet>
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_dayflow_employee_document_search" model="ir.ui.view">
+        <field name="name">dayflow.employee.document.search</field>
+        <field name="model">dayflow.employee.document</field>
+        <field name="arch" type="xml">
+            <search string="Search Documents">
+                <field name="employee_id"/>
+                <field name="document_name"/>
+                <filter string="Pending Verification" name="filter_pending" domain="[('status', '=', 'pending')]"/>
+                <filter string="Approved" name="filter_approved" domain="[('status', '=', 'approved')]"/>
+                <filter string="Rejected" name="filter_rejected" domain="[('status', '=', 'rejected')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="groupby_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Document Type" name="groupby_type" context="{'group_by': 'document_type'}"/>
+                    <filter string="Status" name="groupby_status" context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_dayflow_employee_document" model="ir.actions.act_window">
+        <field name="name">Document Verification</field>
+        <field name="res_model">dayflow.employee.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_dayflow_employee_document_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No employee documents found.
+            </p>
+        </field>
+    </record>
+
+    <!-- Submenu -->
+    <menuitem id="menu_dayflow_employee_document" name="Documents" parent="menu_dayflow_root" action="action_dayflow_employee_document" sequence="5"/>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form_inherit_dayflow" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit.dayflow</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Dayflow Salary Structure" name="dayflow_salary_structure" groups="dayflow_core.group_hr_officer">
+                    <group>
+                        <group string="Earnings (Monthly)" name="earnings">
+                            <field name="basic_salary"/>
+                            <field name="hra"/>
+                            <field name="allowances"/>
+                            <field name="gross_salary" readonly="1" style="font-weight: bold; font-size: 14px;"/>
+                        </group>
+                        <group string="Deductions" name="deductions">
+                            <field name="pf"/>
+                            <field name="professional_tax"/>
+                            <field name="other_deductions"/>
+                            <field name="net_salary" readonly="1" style="font-weight: bold; font-size: 14px; color: green;"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <!-- Menuitem to access Contracts directly in Dayflow HRMS -->
+    <menuitem id="menu_dayflow_contract" name="Salary Contracts" parent="menu_dayflow_root" action="hr_contract.action_hr_contract" sequence="4" groups="dayflow_core.group_hr_officer"/>
+</odoo>
