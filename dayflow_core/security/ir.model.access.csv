@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dayflow_attendance_correction_employee,dayflow.attendance.correction.employee,model_dayflow_attendance_correction,group_employee,1,1,1,0
-access_dayflow_attendance_correction_hr,dayflow.attendance.correction.hr,model_dayflow_attendance_correction,group_hr_officer,1,1,1,1
-access_dayflow_employee_document_employee,dayflow.employee.document.employee,model_dayflow_employee_document,group_employee,1,1,1,0
-access_dayflow_employee_document_hr,dayflow.employee.document.hr,model_dayflow_employee_document,group_hr_officer,1,1,1,1
-access_dayflow_hr_dashboard_hr,dayflow.hr.dashboard.hr,model_dayflow_hr_dashboard,group_hr_officer,1,1,1,1
